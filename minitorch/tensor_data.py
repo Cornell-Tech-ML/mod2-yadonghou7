@@ -48,10 +48,10 @@ def index_to_position(index: Index, strides: Strides) -> int:
     """
     # TODO: Implement for Task 2.1.
     # raise NotImplementedError("Need to implement for Task 2.1")
-    pos = 0
+    position = 0
     for i, stride in zip(index, strides):
-        pos += i * stride
-    return pos
+        position += i * stride
+    return position
 
 
 def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
@@ -101,7 +101,8 @@ def broadcast_index(
         if shape[i] == 1:
             out_index[i] = 0
         else:
-            out_index[i] = big_index[len(big_shape) - len(shape) + i]
+            big_dim = len(big_shape) - len(shape) + i
+            out_index[i] = big_index[big_dim]
 
 
 def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
@@ -124,7 +125,11 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
     # TODO: Implement for Task 2.2.
     # raise NotImplementedError("Need to implement for Task 2.2")
     result_shape = []
-    for dim1, dim2 in zip(reversed(shape1), reversed(shape2)):
+    reversed_shape1 = list(reversed(shape1))
+    reversed_shape2 = list(reversed(shape2))
+    
+    # Iterate over the dimensions of both shapes
+    for dim1, dim2 in zip(reversed_shape1, reversed_shape2):
         if dim1 == dim2:
             result_shape.append(dim1)
         elif dim1 == 1:
@@ -132,12 +137,13 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
         elif dim2 == 1:
             result_shape.append(dim1)
         else:
-            raise IndexingError("Cannot broadcast shapes")
+            raise IndexingError(f"Cannot broadcast dimensions {dim1} and {dim2}")
 
-    if len(shape1) > len(shape2):
-        result_shape.extend(reversed(shape1[: (len(shape1) - len(shape2))]))
-    else:
-        result_shape.extend(reversed(shape2[: (len(shape2) - len(shape1))]))
+    longer_shape = reversed_shape1 if len(reversed_shape1) > len(reversed_shape2) else reversed_shape2
+    for dim in longer_shape[len(result_shape):]:
+        result_shape.append(dim)
+
+    # Reverse the result to restore the original dimension order
     return tuple(reversed(result_shape))
 
 
@@ -232,7 +238,7 @@ class TensorData:
         # Call fast indexing.
         return index_to_position(array(index), self._strides)
 
-    def indices(self) -> Iterable[UserIndex]:  # noqa: D102
+    def indices(self) -> Iterable[UserIndex]:  
         lshape: Shape = array(self.shape)
         out_index: Index = array(self.shape)
         for i in range(self.size):

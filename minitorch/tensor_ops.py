@@ -7,7 +7,7 @@ from typing_extensions import Protocol
 
 from . import operators
 from .tensor_data import (
-    MAX_DIMS,  # noqa: F401
+    MAX_DIMS, 
     broadcast_index,
     index_to_position,
     shape_broadcast,
@@ -16,7 +16,7 @@ from .tensor_data import (
 
 if TYPE_CHECKING:
     from .tensor import Tensor
-    from .tensor_data import Index, Shape, Storage, Strides  # noqa: F401
+    from .tensor_data import Index, Shape, Storage, Strides  
 
 
 class MapProto(Protocol):
@@ -39,7 +39,7 @@ class TensorOps:
         ...
 
     @staticmethod
-    def reduce(  # noqa: D102
+    def reduce(  
         fn: Callable[[float, float], float], start: float = 0.0
     ) -> Callable[[Tensor, int], Tensor]: ...
 
@@ -182,7 +182,7 @@ class SimpleOps(TensorOps):
         return ret
 
     @staticmethod
-    def reduce(  # noqa: D417
+    def reduce(  
         fn: Callable[[float, float], float], start: float = 0.0
     ) -> Callable[["Tensor", int], "Tensor"]:
         """Higher-order tensor reduce function. ::
@@ -273,15 +273,20 @@ def tensor_map(
     ) -> None:
         # TODO: Implement for Task 2.3.
         # raise NotImplementedError("Need to implement for Task 2.3")
+        # Calculate the total number of elements in the output tensor
         out_size = int(np.prod(out_shape))
         out_index = np.zeros_like(out_shape)
         in_index = np.zeros_like(in_shape)
+
         for i in range(out_size):
             to_index(i, out_shape, out_index)
             broadcast_index(out_index, out_shape, in_shape, in_index)
+
             in_pos = index_to_position(in_index, in_strides)
             out_pos = index_to_position(out_index, out_strides)
+
             out[out_pos] = fn(in_storage[in_pos])
+
 
     return _map
 
@@ -329,19 +334,21 @@ def tensor_zip(
     ) -> None:
         # TODO: Implement for Task 2.3.
         # raise NotImplementedError("Need to implement for Task 2.3")
-        out_index = np.zeros(len(out_shape), dtype=int)
-        a_index = np.zeros(len(a_shape), dtype=int)
-        b_index = np.zeros(len(b_shape), dtype=int)
+        out_index = [0] * len(out_shape)
+        a_index = [0] * len(a_shape)
+        b_index = [0] * len(b_shape)
 
         for i in range(len(out)):
             to_index(i, out_shape, out_index)
-            index = index_to_position(out_index, out_strides)
-            broadcast_index(out_index, out_shape, a_shape, a_index)
-            a = a_storage[index_to_position(a_index, a_strides)]
+            out_pos = index_to_position(out_index, out_strides)
 
+            broadcast_index(out_index, out_shape, a_shape, a_index)
+            a_val = a_storage[index_to_position(a_index, a_strides)]
+            
             broadcast_index(out_index, out_shape, b_shape, b_index)
-            b = b_storage[index_to_position(b_index, b_strides)]
-            out[index] = fn(a, b)
+            b_val = b_storage[index_to_position(b_index, b_strides)]
+
+            out[out_pos] = fn(a_val, b_val)
 
     return _zip
 
@@ -360,7 +367,7 @@ def tensor_reduce(
     Returns:
         Tensor reduce function.
 
-    """  # noqa: D407
+    """  
 
     def _reduce(
         out: Storage,
@@ -372,14 +379,17 @@ def tensor_reduce(
         reduce_dim: int,
     ) -> None:
         # TODO: Implement for Task 2.3.
+        # Calculate the total number of elements in the output tensor
         o_size = int(np.prod(out_shape))
         o_index = np.zeros_like(out_shape)
         for i in range(o_size):
             to_index(i, out_shape, o_index)
             assert o_index[reduce_dim] == 0
             out_val = 0.0
+            
             for j in range(a_shape[reduce_dim]):
                 a_index = np.copy(o_index)
+
                 a_index[reduce_dim] = j
                 if j != 0:
                     out_val = fn(
@@ -387,8 +397,10 @@ def tensor_reduce(
                     )
                 else:
                     out_val = a_storage[index_to_position(a_index, a_strides)]
+            
             out_pos = index_to_position(o_index, out_strides)
             out[out_pos] = out_val
+
 
     return _reduce
 

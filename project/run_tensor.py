@@ -3,10 +3,15 @@ Be sure you have minitorch installed in you Virtual Env.
 >>> pip install -Ue .
 """
 
-import minitorch
+import os
+import sys
 
-# Use this function to make a random parameter in
-# your module.
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+
+import minitorch  # noqa: E402
+
+
 def RParam(*shape):
     r = 2 * (minitorch.rand(shape) - 0.5)
     return minitorch.Parameter(r)
