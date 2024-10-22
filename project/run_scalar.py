@@ -31,37 +31,16 @@ class Network(minitorch.Module):
 
 
 class Linear(minitorch.Module):
-    def __init__(self, in_size, out_size):
-        super().__init__()
-        self.weights = []
-        self.bias = []
-        for i in range(in_size):
-            self.weights.append([])
-            for j in range(out_size):
-                self.weights[i].append(
-                    self.add_parameter(
-                        f"weight_{i}_{j}", minitorch.Scalar(2 * (random.random() - 0.5))
-                    )
-                )
-        for j in range(out_size):
-            self.bias.append(
-                self.add_parameter(
-                    f"bias_{j}", minitorch.Scalar(2 * (random.random() - 0.5))
-                )
-            )
     # def __init__(self, in_size, out_size):
     #     super().__init__()
     #     self.weights = []
     #     self.bias = []
-
-    #     xavier_weights = Linear.get_xavier_weights(in_size, out_size)
-
     #     for i in range(in_size):
     #         self.weights.append([])
     #         for j in range(out_size):
     #             self.weights[i].append(
     #                 self.add_parameter(
-    #                     f"weight_{i}_{j}", minitorch.Scalar(xavier_weights[i * out_size + j])
+    #                     f"weight_{i}_{j}", minitorch.Scalar(2 * (random.random() - 0.5))
     #                 )
     #             )
     #     for j in range(out_size):
@@ -70,6 +49,27 @@ class Linear(minitorch.Module):
     #                 f"bias_{j}", minitorch.Scalar(2 * (random.random() - 0.5))
     #             )
     #         )
+    def __init__(self, in_size, out_size):
+        super().__init__()
+        self.weights = []
+        self.bias = []
+
+        xavier_weights = Linear.get_xavier_weights(in_size, out_size)
+
+        for i in range(in_size):
+            self.weights.append([])
+            for j in range(out_size):
+                self.weights[i].append(
+                    self.add_parameter(
+                        f"weight_{i}_{j}", minitorch.Scalar(xavier_weights[i * out_size + j])
+                    )
+                )
+        for j in range(out_size):
+            self.bias.append(
+                self.add_parameter(
+                    f"bias_{j}", minitorch.Scalar(2 * (random.random() - 0.5))
+                )
+            )
     @staticmethod
     def get_xavier_weights(fan_in: int, fan_out: int):
         n = fan_in * fan_out
