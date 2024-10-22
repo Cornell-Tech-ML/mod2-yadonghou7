@@ -1,9 +1,6 @@
 """Collection of the core mathematical operators used throughout the code base."""
 
-import math
-
 # ## Task 0.1
-from typing import Callable, Iterable
 
 #
 # Implementation of a prelude of elementary functions.
@@ -31,113 +28,159 @@ from typing import Callable, Iterable
 # For is_close:
 # $f(x) = |x - y| < 1e-2$
 
+import math
+from typing import Callable, Iterable
 
-# TODO: Implement for Task 0.1
+### Task 0.1
+#
+# Implementation of a prelude of elementary functions.
+
+
 def mul(x: float, y: float) -> float:
-    """Multiplication function $f(x, y) = x * y$"""
+    """$f(x, y) = x * y$"""
+    # ASSIGN 0.1
     return x * y
+    # END ASSIGN 0.1
 
 
-def id(x: float) -> float:  # noqa: D103
-    """Identity function $f(x) = x$"""
+def id(x: float) -> float:
+    """$f(x) = x$"""
+    # ASSIGN 0.1
     return x
+    # END ASSIGN 0.1
 
 
-def add(x: float, y: float) -> float:  # noqa: D103
-    """Addition function $f(x, y) = x + y$"""
+def add(x: float, y: float) -> float:
+    """$f(x, y) = x + y$"""
+    # ASSIGN 0.1
     return x + y
+    # END ASSIGN 0.1
 
 
-def neg(x: float) -> float:  # noqa: D103
-    """Negation function $f(x) = -x$"""
+def neg(x: float) -> float:
+    """$f(x) = -x$"""
+    # ASSIGN 0.1
     return -x
+    # END ASSIGN 0.1
 
 
-def lt(x: float, y: float) -> float:  # noqa: D103
-    """Less than function $f(x, y) = 1$ if $x < y$ else $0$"""
+def lt(x: float, y: float) -> float:
+    """$f(x) = 1.0 if x is less than y else 0.0$"""
+    # ASSIGN 0.1
     return 1.0 if x < y else 0.0
+    # END ASSIGN 0.1
 
 
-def eq(x: float, y: float) -> float:  # noqa: D103
-    """Equality function $f(x, y) = 1$ if $x == y$ else $0$"""
-    return 1.0 if x == y else 0.0
+def eq(a: float, b: float) -> float:
+    """Returns 1.0 if a == b, else 0.0."""
+    return 1.0 if a == b else 0.0
 
 
-def max(x: float, y: float) -> float:  # noqa: D103
-    r"""Maximum function $f(x, y) = \max(x, y)$"""
+def max(x: float, y: float) -> float:
+    """$f(x) = x if x is greater than y else y$"""
+    # ASSIGN 0.1
     return x if x > y else y
+    # END ASSIGN 0.1
 
 
-def is_close(x: float, y: float) -> float:  # noqa: D103
-    """Close function $f(x, y) = 1$ if $|x - y| < 1e-2$ else $0$"""
+def is_close(x: float, y: float) -> float:
+    """$f(x) = |x - y| < 1e-2$"""
+    # ASSIGN 0.1
     return (x - y < 1e-2) and (y - x < 1e-2)
+    # END ASSIGN 0.1
 
 
-def sigmoid(x: float) -> float:  # noqa: D103
-    r"""Sigmoid function $f(x) = \frac{1.0}{(1.0 + e^{-x})}$ if $x >= 0$ else $\frac{e^x}{(1.0 + e^{x})}$"""
+def sigmoid(x: float) -> float:
+    r"""$f(x) = \frac{1.0}{(1.0 + e^{-x})}$
+
+    (See https://en.wikipedia.org/wiki/Sigmoid_function )
+
+    Calculate as
+
+    $f(x) = \frac{1.0}{(1.0 + e^{-x})}$ if x >=0 else $\frac{e^x}{(1.0 + e^{x})}$
+
+    for stability.
+    """
+    # ASSIGN 0.1
     if x >= 0:
         return 1.0 / (1.0 + math.exp(-x))
     else:
         return math.exp(x) / (1.0 + math.exp(x))
+    # END ASSIGN 0.1
 
 
-def relu(x: float) -> float:  # noqa: D103
-    """ReLU function $f(x) = x$ if $x > 0$ else $0$"""
+def relu(x: float) -> float:
+    """$f(x) = x if x is greater than 0, else 0
+
+    (See https://en.wikipedia.org/wiki/Rectifier_(neural_networks) .)
+    """
+    # ASSIGN 0.1
     return x if x > 0 else 0.0
+    # END ASSIGN 0.1
 
 
 EPS = 1e-6
 
 
-def log(x: float) -> float:  # noqa: D103
-    r"""Logarithm function $f(x) = \log(x + 1e-6)$"""
+def log(x: float) -> float:
+    """$f(x) = log(x)$"""
     return math.log(x + EPS)
 
 
-def exp(x: float) -> float:  # noqa: D103
-    """Exponential function $f(x) = e^x$"""
+def exp(x: float) -> float:
+    """$f(x) = e^{x}$"""
     return math.exp(x)
 
 
-def log_back(x: float, d: float) -> float:  # noqa: D103
-    r"""Logarithm back function $f(x, d) = \frac{d}{x + 1e-6}$"""
+def log_back(x: float, d: float) -> float:
+    r"""If $f = log$ as above, compute $d \times f'(x)$"""
+    # ASSIGN 0.1
     return d / (x + EPS)
+    # END ASSIGN 0.1
 
 
-def inv(x: float) -> float:  # noqa: D103
-    """Inverse function $f(x) = 1.0 / x$"""
+def inv(x: float) -> float:
+    """$f(x) = 1/x$"""
+    # ASSIGN 0.1
     return 1.0 / x
+    # END ASSIGN 0.1
 
 
-def inv_back(x: float, d: float) -> float:  # noqa: D103
-    r"""Inverse back function $f(x, d) = -\frac{d}{x^2}$"""
+def inv_back(x: float, d: float) -> float:
+    r"""If $f(x) = 1/x$ compute $d \times f'(x)$"""
+    # ASSIGN 0.1
     return -(1.0 / x**2) * d
+    # END ASSIGN 0.1
 
 
-def relu_back(x: float, d: float) -> float:  # noqa: D103
-    """ReLU back function $f(x, d) = d$ if $x > 0$ else $0$"""
+def relu_back(x: float, d: float) -> float:
+    r"""If $f = relu$ compute $d \times f'(x)$"""
+    # ASSIGN 0.1
     return d if x > 0 else 0.0
+    # END ASSIGN 0.1
 
 
-# ## Task 0.3
-
+### Task 0.3
+#
 # Small practice library of elementary higher-order functions.
 
-# Implement the following core functions
-# - map
-# - zipWith
-# - reduce
-#
-# Use these to implement
-# - negList : negate a list
-# - addLists : add two lists together
-# - sum: sum lists
-# - prod: take the product of lists
 
+def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[float]]:
+    """Higher-order map.
 
-# TODO: Implement for Task 0.3.
-# Core Functions:
-def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[float]]:  # noqa: D103
+    See https://en.wikipedia.org/wiki/Map_(higher-order_function)
+
+    Args:
+    ----
+    fn: Function from one value to one value.
+
+    Returns:
+    -------
+    A function that takes a list, applies `fn` to each element, and returns a new list
+
+    """
+
+    # ASSIGN 0.3
     def _map(ls: Iterable[float]) -> Iterable[float]:
         ret = []
         for x in ls:
@@ -145,11 +188,35 @@ def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[fl
         return ret
 
     return _map
+    # END ASSIGN 0.3
 
 
-def zipWith(  # noqa: D103
+def negList(ls: Iterable[float]) -> Iterable[float]:
+    """Use `map` and `neg` to negate each element in `ls`"""
+    # ASSIGN 0.3
+    return map(neg)(ls)
+    # END ASSIGN 0.3
+
+
+def zipWith(
     fn: Callable[[float, float], float],
-) -> Callable[[Iterable[float], Iterable[float]], Iterable[float]]:  # noqa: D103
+) -> Callable[[Iterable[float], Iterable[float]], Iterable[float]]:
+    """Higher-order zipWith (or map2).
+
+    See https://en.wikipedia.org/wiki/Map_(higher-order_function)
+
+    Args:
+    ----
+    fn: combine two values
+
+    Returns:
+    -------
+    Function that takes two equally sized lists `ls1` and `ls2`, produce a new list by
+    applying fn(x, y) on each pair of elements.
+
+    """
+
+    # ASSIGN 0.3
     def _zipWith(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
         ret = []
         for x, y in zip(ls1, ls2):
@@ -157,11 +224,34 @@ def zipWith(  # noqa: D103
         return ret
 
     return _zipWith
+    # END ASSIGN 0.3
 
 
-def reduce(  # noqa: D103
+def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
+    """Add the elements of `ls1` and `ls2` using `zipWith` and `add`"""
+    # ASSIGN 0.3
+    return zipWith(add)(ls1, ls2)
+    # END ASSIGN 0.3
+
+
+def reduce(
     fn: Callable[[float, float], float], start: float
-) -> Callable[[Iterable[float]], float]:  # noqa: D103
+) -> Callable[[Iterable[float]], float]:
+    r"""Higher-order reduce.
+
+    Args:
+    ----
+    fn: combine two values
+    start: start value $x_0$
+
+    Returns:
+    -------
+    Function that takes a list `ls` of elements
+    $x_1 \ldots x_n$ and computes the reduction :math:`fn(x_3, fn(x_2, fn(x_1, x_0)))`
+
+    """
+
+    # ASSIGN 0.3
     def _reduce(ls: Iterable[float]) -> float:
         val = start
         for l in ls:
@@ -169,19 +259,18 @@ def reduce(  # noqa: D103
         return val
 
     return _reduce
+    # END ASSIGN 0.3
 
 
-def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:  # type: ignore  # noqa: D103
-    return zipWith(add)(ls1, ls2)
-
-
-def negList(ls: Iterable[float]) -> Iterable[float]:  # type: ignore  # noqa: D103
-    return map(neg)(ls)
-
-
-def sum(ls: Iterable[float]) -> float:  # noqa: D103 # type: ignore
+def sum(ls: Iterable[float]) -> float:
+    """Sum up a list using `reduce` and `add`."""
+    # ASSIGN 0.3
     return reduce(add, 0.0)(ls)
+    # END ASSIGN 0.3
 
 
-def prod(ls: Iterable[float]) -> float:  # noqa: D103
+def prod(ls: Iterable[float]) -> float:
+    """Product of a list using `reduce` and `mul`."""
+    # ASSIGN 0.3
     return reduce(mul, 1.0)(ls)
+    # END ASSIGN 0.3

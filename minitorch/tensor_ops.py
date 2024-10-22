@@ -320,8 +320,6 @@ def tensor_map(
             in_pos = index_to_position(in_index, in_strides)
             out_pos = index_to_position(out_index, out_strides)
             out[out_pos] = fn(in_storage[in_pos])
-
-
     return _map
 
 

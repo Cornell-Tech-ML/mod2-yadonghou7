@@ -3,14 +3,7 @@ Be sure you have minitorch installed in you Virtual Env.
 >>> pip install -Ue .
 """
 
-import os
-import sys
-
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(parent_dir)
-
-import minitorch  # noqa: E402
-
+import minitorch
 
 def RParam(*shape):
     r = 2 * (minitorch.rand(shape) - 0.5)

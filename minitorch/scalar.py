@@ -62,6 +62,7 @@ class Scalar:
     derivative: Optional[float] = None
     name: str = field(default="")
     unique_id: int = field(default=0)
+    grad: Optional[float] = None
 
     def __post_init__(self):
         global _var_count
