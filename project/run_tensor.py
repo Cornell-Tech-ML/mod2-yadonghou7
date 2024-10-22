@@ -35,7 +35,7 @@ class Linear(minitorch.Module):
         x_broadcasted = x.view(*x.shape, 1)
         weights_broadcasted = self.weights.value.view(
             1, *self.weights.value.shape
-        )  
+        )
         v_1 = x_broadcasted * weights_broadcasted
 
         v_2 = v_1.sum(dim=1).contiguous().view(x.shape[0], self.out_size)
