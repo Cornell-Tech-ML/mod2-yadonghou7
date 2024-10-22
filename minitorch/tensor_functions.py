@@ -257,7 +257,7 @@ class Permute(Function):
 
 class View(Function):
     @staticmethod
-    def forward(ctx: Context, a: Tensor, shape: Tensor) -> Tensor:  
+    def forward(ctx: Context, a: Tensor, shape: Tensor) -> Tensor:
         """Reshape a tensor to a new shape."""
         ctx.save_for_backward(a.shape)
         assert a._tensor.is_contiguous(), "Must be contiguous to view"
@@ -461,4 +461,3 @@ but was expecting derivative %f from central difference.
             1e-2,
             err_msg=err_msg % (f, vals, x.grad[ind], i, ind, check),
         )
-

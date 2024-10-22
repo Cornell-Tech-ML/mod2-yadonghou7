@@ -7,7 +7,6 @@ from typing_extensions import Protocol
 
 from . import operators
 from .tensor_data import (
-    MAX_DIMS, 
     broadcast_index,
     index_to_position,
     shape_broadcast,
@@ -16,7 +15,7 @@ from .tensor_data import (
 
 if TYPE_CHECKING:
     from .tensor import Tensor
-    from .tensor_data import Index, Shape, Storage, Strides  
+    from .tensor_data import Shape, Storage, Strides
 
 
 class MapProto(Protocol):
@@ -39,7 +38,7 @@ class TensorOps:
         ...
 
     @staticmethod
-    def reduce(  
+    def reduce(
         fn: Callable[[float, float], float], start: float = 0.0
     ) -> Callable[["Tensor", int], "Tensor"]:
         """Higher-order tensor reduce function. ::
@@ -220,7 +219,7 @@ class SimpleOps(TensorOps):
         return ret
 
     @staticmethod
-    def reduce(  
+    def reduce(
         fn: Callable[[float, float], float], start: float = 0.0
     ) -> Callable[["Tensor", int], "Tensor"]:
         """Higher-order tensor reduce function. ::
@@ -320,6 +319,7 @@ def tensor_map(
             in_pos = index_to_position(in_index, in_strides)
             out_pos = index_to_position(out_index, out_strides)
             out[out_pos] = fn(in_storage[in_pos])
+
     return _map
 
 
@@ -376,7 +376,7 @@ def tensor_zip(
 
             broadcast_index(out_index, out_shape, a_shape, a_index)
             a_val = a_storage[index_to_position(a_index, a_strides)]
-            
+
             broadcast_index(out_index, out_shape, b_shape, b_index)
             b_val = b_storage[index_to_position(b_index, b_strides)]
 
@@ -394,12 +394,14 @@ def tensor_reduce(
        except with `reduce_dim` turned to size `1`
 
     Args:
+    ----
         fn: reduction function mapping two floats to float
 
     Returns:
+    -------
         Tensor reduce function.
 
-    """  
+    """
 
     def _reduce(
         out: Storage,
@@ -418,7 +420,7 @@ def tensor_reduce(
             to_index(i, out_shape, o_index)
             assert o_index[reduce_dim] == 0
             out_val = 0.0
-            
+
             for j in range(a_shape[reduce_dim]):
                 a_index = np.copy(o_index)
 
@@ -429,10 +431,9 @@ def tensor_reduce(
                     )
                 else:
                     out_val = a_storage[index_to_position(a_index, a_strides)]
-            
+
             out_pos = index_to_position(o_index, out_strides)
             out[out_pos] = out_val
-
 
     return _reduce
 

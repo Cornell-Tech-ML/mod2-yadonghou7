@@ -127,7 +127,7 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
     result_shape = []
     reversed_shape1 = list(reversed(shape1))
     reversed_shape2 = list(reversed(shape2))
-    
+
     # Iterate over the dimensions of both shapes
     for dim1, dim2 in zip(reversed_shape1, reversed_shape2):
         if dim1 == dim2:
@@ -139,8 +139,12 @@ def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
         else:
             raise IndexingError(f"Cannot broadcast dimensions {dim1} and {dim2}")
 
-    longer_shape = reversed_shape1 if len(reversed_shape1) > len(reversed_shape2) else reversed_shape2
-    for dim in longer_shape[len(result_shape):]:
+    longer_shape = (
+        reversed_shape1
+        if len(reversed_shape1) > len(reversed_shape2)
+        else reversed_shape2
+    )
+    for dim in longer_shape[len(result_shape) :]:
         result_shape.append(dim)
 
     # Reverse the result to restore the original dimension order

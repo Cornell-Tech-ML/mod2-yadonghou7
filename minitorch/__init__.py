@@ -1,5 +1,4 @@
-"""
-minitorch package initialization.
+"""minitorch package initialization.
 
 This package provides modules for tensor operations, automatic differentiation,
 and other utilities for building neural networks.
