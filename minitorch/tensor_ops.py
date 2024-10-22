@@ -41,7 +41,45 @@ class TensorOps:
     @staticmethod
     def reduce(  
         fn: Callable[[float, float], float], start: float = 0.0
-    ) -> Callable[[Tensor, int], Tensor]: ...
+    ) -> Callable[["Tensor", int], "Tensor"]:
+        """Higher-order tensor reduce function. ::
+
+          fn_reduce = reduce(fn)
+          out = fn_reduce(a, dim)
+
+        Simple version ::
+
+            for j:
+                out[1, j] = start
+                for i:
+                    out[1, j] = fn(out[1, j], a[i, j])
+
+        Args:
+        ----
+            fn: function from two floats-to-float to apply
+            start: initial value for the reduction
+            a (:class:`TensorData`): tensor to reduce over
+            dim (int): int of dim to reduce
+
+        Returns:
+        -------
+            :class:`TensorData` : new tensor
+
+        """
+        f = tensor_reduce(fn)
+
+        def ret(a: "Tensor", dim: int) -> "Tensor":
+            out_shape = list(a.shape)
+            out_shape[dim] = 1
+
+            # Other values when not sum.
+            out = a.zeros(tuple(out_shape))
+            out._tensor._storage[:] = start
+
+            f(*out.tuple(), *a.tuple(), dim)
+            return out
+
+        return ret
 
     @staticmethod
     def matrix_multiply(a: Tensor, b: Tensor) -> Tensor:
@@ -197,10 +235,10 @@ class SimpleOps(TensorOps):
                 for i:
                     out[1, j] = fn(out[1, j], a[i, j])
 
-
         Args:
         ----
             fn: function from two floats-to-float to apply
+            start: initial value for the reduction
             a (:class:`TensorData`): tensor to reduce over
             dim (int): int of dim to reduce
 
@@ -273,18 +311,14 @@ def tensor_map(
     ) -> None:
         # TODO: Implement for Task 2.3.
         # raise NotImplementedError("Need to implement for Task 2.3")
-        # Calculate the total number of elements in the output tensor
         out_size = int(np.prod(out_shape))
         out_index = np.zeros_like(out_shape)
         in_index = np.zeros_like(in_shape)
-
         for i in range(out_size):
             to_index(i, out_shape, out_index)
             broadcast_index(out_index, out_shape, in_shape, in_index)
-
             in_pos = index_to_position(in_index, in_strides)
             out_pos = index_to_position(out_index, out_strides)
-
             out[out_pos] = fn(in_storage[in_pos])
 
 
