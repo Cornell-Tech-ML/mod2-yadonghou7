@@ -1,3 +1,9 @@
+"""minitorch package initialization.
+
+This package provides modules for tensor operations, automatic differentiation,
+and other utilities for building neural networks.
+"""
+
 from .testing import MathTest, MathTestVariable  # type: ignore # noqa: F401,F403
 from .tensor_data import *  # noqa: F401,F403
 from .tensor import *  # noqa: F401,F403
